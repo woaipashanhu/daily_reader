@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#1a1a2e"/>
+  <g fill="#e8d5b7">
+    <!-- 打开的书 -->
+    <path d="M96 45 L96 140 Q70 130 45 140 L45 55 Q70 45 96 55 Z"/>
+    <path d="M96 45 L96 140 Q122 130 147 140 L147 55 Q122 45 96 55 Z"/>
+    <!-- 书脊 -->
+    <line x1="96" y1="45" x2="96" y2="140" stroke="#c9b896" stroke-width="2"/>
+    <!-- 文字线条 -->
+    <line x1="55" y1="70" x2="88" y2="70" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="55" y1="85" x2="88" y2="85" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="55" y1="100" x2="88" y2="100" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="55" y1="115" x2="75" y2="115" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="104" y1="70" x2="137" y2="70" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="104" y1="85" x2="137" y2="85" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="104" y1="100" x2="137" y2="100" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="104" y1="115" x2="125" y2="115" stroke="#1a1a2e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
