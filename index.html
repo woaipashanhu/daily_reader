@@ -25,7 +25,7 @@
 
         .container {
             max-width: 100%;
-            padding: 20px 20px 80px 20px;
+            padding: 20px 20px 100px 20px;
         }
 
         .article {
@@ -39,24 +39,24 @@
         }
 
         .article-date {
-            font-size: 14px;
+            font-size: 16px;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 16px;
             letter-spacing: 1px;
         }
 
         .article-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
-            color: #fff;
-            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 20px;
             letter-spacing: 1px;
         }
 
         .article-content {
-            font-size: 18px;
+            font-size: 20px;
             line-height: 2;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.75);
             text-align: justify;
         }
 
@@ -64,33 +64,50 @@
             margin-bottom: 16px;
         }
 
-        /* 向下箭头按钮 */
-        .scroll-bottom {
+        /* 导航按钮容器 */
+        .nav-buttons {
             position: fixed;
             bottom: 30px;
             right: 20px;
-            width: 50px;
-            height: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 56px;
+            height: 44px;
             background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 100;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            letter-spacing: 1px;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .scroll-bottom:active {
+        .nav-btn:active {
             background-color: rgba(255, 255, 255, 0.3);
             transform: scale(0.95);
         }
 
-        .scroll-bottom svg {
-            width: 24px;
-            height: 24px;
+        .nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
             fill: rgba(255, 255, 255, 0.8);
         }
 
@@ -110,15 +127,6 @@
             font-size: 16px;
         }
 
-        /* 分隔线提示 */
-        .divider-text {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
-
         ::-webkit-scrollbar {
             width: 0;
             background: transparent;
@@ -130,19 +138,26 @@
         <div class="loading">正在加载...</div>
     </div>
 
-    <div class="scroll-bottom" id="scrollBottom" onclick="scrollToBottom()">
-        <svg viewBox="0 0 24 24">
-            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-        </svg>
+    <div class="nav-buttons">
+        <div class="nav-btn" id="prevBtn" onclick="goToPrev()">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+        </div>
+        <div class="nav-btn" id="nextBtn" onclick="goToNext()">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+            </svg>
+        </div>
     </div>
 
     <script>
-        // 文章列表（由更新脚本自动生成）
         let articles = [];
+        let currentIndex = 0;
 
         async function loadArticles() {
             try {
-                const response = await fetch('articles/list.json');
+                const response = await fetch('articles/list.json?t=' + Date.now());
                 articles = await response.json();
                 
                 if (articles.length === 0) {
@@ -150,8 +165,8 @@
                     return;
                 }
 
-                // 按日期倒序排列（最新的在前/在上）
-                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                // 按日期正序排列（最旧的在上，最新的在下）
+                articles.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                 await renderArticles();
             } catch (error) {
@@ -171,29 +186,33 @@
                 let content = article.content || '';
                 if (article.file) {
                     try {
-                        const response = await fetch(`articles/${article.file}`);
+                        const response = await fetch(`articles/${article.file}?t=` + Date.now());
                         const data = await response.json();
                         content = data.content;
                     } catch (e) {
+                        console.error('文章加载失败:', article.file, e);
                         content = '内容加载失败';
                     }
                 }
 
                 const articleHtml = `
-                    <div class="article" id="article-${article.date}">
+                    <div class="article" id="article-${i}" data-index="${i}">
                         <div class="article-date">${formatDate(article.date)}</div>
                         ${article.title ? `<div class="article-title">${article.title}</div>` : ''}
                         <div class="article-content">${formatContent(content)}</div>
                     </div>
-                    ${i < articles.length - 1 ? '<div class="divider-text">↑ 往期内容 ↑</div>' : ''}
                 `;
                 container.innerHTML += articleHtml;
             }
 
-            // 页面加载后滚动到最底部（显示最新文章）
+            // 默认显示最新文章（最后一篇）
+            currentIndex = articles.length - 1;
+            
+            // 滚动到当前文章
             setTimeout(() => {
-                scrollToBottom();
-            }, 100);
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }, 150);
         }
 
         function formatDate(dateStr) {
@@ -207,16 +226,53 @@
         }
 
         function formatContent(content) {
+            // 去掉开头的日期格式（如 2026.2.26 或 2026.2.25）
+            content = content.replace(/^\d{4}\.\d{1,2}\.\d{1,2}\s*\n?/, '');
             // 将换行符转换为段落
             const paragraphs = content.split(/\n+/).filter(p => p.trim());
             return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
         }
 
-        function scrollToBottom() {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
+        function scrollToArticle(index) {
+            const article = document.getElementById(`article-${index}`);
+            if (article) {
+                article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // 已经是最新的（最后一篇），隐藏下一篇按钮
+            if (currentIndex >= articles.length - 1) {
+                nextBtn.classList.add('disabled');
+            } else {
+                nextBtn.classList.remove('disabled');
+            }
+            
+            // 已经是最旧的（第一篇），隐藏上一篇按钮
+            if (currentIndex <= 0) {
+                prevBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+            }
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }
+        }
+
+        function goToNext() {
+            if (currentIndex < articles.length - 1) {
+                currentIndex++;
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }
         }
 
         // 初始化
