@@ -203,7 +203,7 @@
                     <div class="article" id="article-${i}" data-index="${i}">
                         <div class="article-date">${formatDate(article.date)}</div>
                         ${article.title ? `<div class="article-title">${article.title}</div>` : ''}
-                        <div class="article-content">${formatContent(content)}</div>
+                        <div class="article-content">${formatContent(content, article.title)}</div>
                     </div>
                 `;
                 container.innerHTML += articleHtml;
@@ -229,9 +229,19 @@
             return `${year}年${month}月${day}日 ${weekDay}`;
         }
 
-        function formatContent(content) {
+        function formatContent(content, title) {
             // 去掉开头的日期格式（如 2026.2.26 或 2026.2.25）
             content = content.replace(/^\d{4}\.\d{1,2}\.\d{1,2}\s*\n?/, '');
+            // 去掉开头重复的标题（如果第一行和标题相似）
+            const firstLine = content.split('\n')[0].trim();
+            if (firstLine && title && (
+                firstLine === title || 
+                firstLine.includes(title) || 
+                title.includes(firstLine) ||
+                firstLine.replace(/[《》【】]/g, '') === title.replace(/[《》【】]/g, '')
+            )) {
+                content = content.substring(firstLine.length).trim();
+            }
             // 将换行符转换为段落
             const paragraphs = content.split(/\n+/).filter(p => p.trim());
             return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
