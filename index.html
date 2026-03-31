@@ -336,7 +336,7 @@
     </div>
 
     <div class="nav-buttons">
-        <div class="nav-btn" id="prevBtn" onclick="goToTop()">
+        <div class="nav-btn" id="prevBtn" onclick="goToPrev()">
             <svg viewBox="0 0 24 24">
                 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
             </svg>
@@ -483,8 +483,12 @@
             }
         }
 
-        function goToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }
         }
 
         function goToNext() {
