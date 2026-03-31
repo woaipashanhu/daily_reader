@@ -19,7 +19,7 @@
         }
 
         body {
-            font-family: -apple-system, -apple-system-font, "SF Pro Text", "Helvetica Neue", sans-serif;
+            font-family: -apple-system, -apple-system-font, "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
             background-color: #000;
             color: #fff;
             line-height: 1.8;
@@ -35,7 +35,7 @@
         .article {
             margin-bottom: 60px;
             padding-bottom: 40px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .article:last-child {
@@ -43,29 +43,203 @@
         }
 
         .article-date {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 16px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.35);
+            margin-bottom: 14px;
             letter-spacing: 1px;
         }
 
         .article-title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
 
         .article-content {
-            font-size: 20px;
+            font-size: 17px;
             line-height: 2;
             color: rgba(255, 255, 255, 0.75);
             text-align: justify;
         }
 
+        /* 段落 */
         .article-content p {
             margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* 标题 */
+        .article-content h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 32px 0 16px 0;
+            line-height: 1.4;
+        }
+
+        .article-content h2 {
+            font-size: 19px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 28px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            line-height: 1.5;
+        }
+
+        .article-content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 24px 0 10px 0;
+            line-height: 1.5;
+        }
+
+        .article-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+            margin: 20px 0 8px 0;
+            line-height: 1.5;
+        }
+
+        /* 引用块 */
+        .article-content blockquote {
+            border-left: 3px solid rgba(255, 165, 0, 0.6);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.55);
+            line-height: 1.8;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .article-content blockquote p {
+            margin-bottom: 0;
+        }
+
+        /* 代码块 */
+        .article-content pre {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 14px 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-x: auto;
+            color: rgba(255, 255, 255, 0.65);
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            -webkit-overflow-scrolling: touch;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* 内联代码 */
+        .article-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 列表 */
+        .article-content ul,
+        .article-content ol {
+            margin: 12px 0 16px 20px;
+            line-height: 2;
+        }
+
+        .article-content li {
+            margin-bottom: 6px;
+        }
+
+        /* 表格 - 手机友好 */
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 20px 0;
+            font-size: 13px;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .article-content thead {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .article-content tbody {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .article-content tr {
+            display: table-row;
+        }
+
+        .article-content th,
+        .article-content td {
+            display: table-cell;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .article-content thead th {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+        }
+
+        .article-content tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .article-content tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* 强调文本 */
+        .article-content strong {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+        }
+
+        .article-content em {
+            color: rgba(255, 255, 255, 0.65);
+            font-style: italic;
+        }
+
+        /* 分隔线 */
+        .article-content hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 28px 0;
         }
 
         /* 导航按钮容器 */
@@ -131,15 +305,76 @@
             font-size: 16px;
         }
 
+        /* 回到顶部按钮 */
+        .nav-btn-top {
+            position: fixed;
+            bottom: 130px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .nav-btn-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-btn-top:active {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(0.95);
+        }
+
+        .nav-btn-top svg {
+            width: 18px;
+            height: 18px;
+            fill: rgba(255, 255, 255, 0.7);
+        }
+
         ::-webkit-scrollbar {
             width: 0;
             background: transparent;
+        }
+
+        /* 超宽屏幕适配 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 680px;
+                margin: 0 auto;
+                padding: 40px 20px 100px 20px;
+            }
+
+            .article-content {
+                font-size: 18px;
+            }
+
+            .article-content table {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container" id="container">
         <div class="loading">正在加载...</div>
+    </div>
+
+    <!-- 回到顶部 -->
+    <div class="nav-btn-top" id="topBtn" onclick="goToTop()">
+        <svg viewBox="0 0 24 24">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+        </svg>
     </div>
 
     <div class="nav-buttons">
@@ -202,7 +437,7 @@
                 const articleHtml = `
                     <div class="article" id="article-${i}" data-index="${i}">
                         <div class="article-date">${formatDate(article.date)}</div>
-                        ${article.title ? `<div class="article-title">${article.title}</div>` : ''}
+                        ${article.title ? `<div class="article-title">${escapeHtml(article.title)}</div>` : ''}
                         <div class="article-content">${formatContent(content, article.title)}</div>
                     </div>
                 `;
@@ -217,6 +452,22 @@
                 scrollToArticle(currentIndex);
                 updateNavButtons();
             }, 150);
+
+            // 监听滚动显示/隐藏回到顶部按钮
+            window.addEventListener('scroll', () => {
+                const topBtn = document.getElementById('topBtn');
+                if (window.scrollY > 600) {
+                    topBtn.classList.add('show');
+                } else {
+                    topBtn.classList.remove('show');
+                }
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function formatDate(dateStr) {
@@ -230,9 +481,21 @@
         }
 
         function formatContent(content, title) {
-            // 去掉开头的日期格式（如 2026.2.26 或 2026.2.25）
+            // 如果内容已经是 HTML（包含标签），直接返回（去掉开头重复标题）
+            if (content.includes('<') && (content.includes('<p>') || content.includes('<table>'))) {
+                // 去掉开头的 h1 标题（如果和文章标题重复）
+                const h1Match = content.match(/^<h1>(.*?)<\/h1>\s*/);
+                if (h1Match && title) {
+                    const h1Text = h1Match[1];
+                    if (h1Text === title || title.includes(h1Text) || h1Text.includes(title)) {
+                        content = content.substring(h1Match[0].length);
+                    }
+                }
+                return content;
+            }
+
+            // 纯文本回退：去掉开头的日期格式，去掉重复标题，转成段落
             content = content.replace(/^\d{4}\.\d{1,2}\.\d{1,2}\s*\n?/, '');
-            // 去掉开头重复的标题（如果第一行和标题相似）
             const firstLine = content.split('\n')[0].trim();
             if (firstLine && title && (
                 firstLine === title || 
@@ -242,7 +505,6 @@
             )) {
                 content = content.substring(firstLine.length).trim();
             }
-            // 将换行符转换为段落
             const paragraphs = content.split(/\n+/).filter(p => p.trim());
             return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
         }
@@ -258,14 +520,12 @@
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             
-            // 已经是最新的（最后一篇），隐藏下一篇按钮
             if (currentIndex >= articles.length - 1) {
                 nextBtn.classList.add('disabled');
             } else {
                 nextBtn.classList.remove('disabled');
             }
             
-            // 已经是最旧的（第一篇），隐藏上一篇按钮
             if (currentIndex <= 0) {
                 prevBtn.classList.add('disabled');
             } else {
@@ -289,10 +549,14 @@
             }
         }
 
+        function goToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', loadArticles);
 
-        // 监听页面返回
+        // 监听页面返回（缓存恢复）
         window.addEventListener('pageshow', function(event) {
             if (event.persisted) {
                 loadArticles();
