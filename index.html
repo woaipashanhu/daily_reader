@@ -50,7 +50,7 @@
         }
 
         .article-title {
-            font-size: 26px;
+            font-size: 28px !important;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 24px;
@@ -59,7 +59,7 @@
         }
 
         .article-content {
-            font-size: 19px;
+            font-size: 20px !important;
             line-height: 2;
             color: rgba(255, 255, 255, 0.75);
             text-align: justify;
@@ -81,7 +81,7 @@
         }
 
         .article-content h2 {
-            font-size: 21px;
+            font-size: 23px !important;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.85);
             margin: 28px 0 12px 0;
@@ -91,7 +91,7 @@
         }
 
         .article-content h3 {
-            font-size: 19px;
+            font-size: 21px !important;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.8);
             margin: 24px 0 10px 0;
@@ -112,7 +112,7 @@
             background: rgba(255, 255, 255, 0.04);
             padding: 12px 16px;
             margin: 16px 0;
-            font-size: 17px;
+            font-size: 18px !important;
             color: rgba(255, 255, 255, 0.55);
             line-height: 1.8;
             border-radius: 0 6px 6px 0;
@@ -128,7 +128,7 @@
             padding: 14px 16px;
             margin: 16px 0;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 16px !important;
             line-height: 1.7;
             overflow-x: auto;
             color: rgba(255, 255, 255, 0.65);
@@ -170,7 +170,7 @@
             width: 100%;
             border-collapse: collapse;
             margin: 16px 0 20px 0;
-            font-size: 13px;
+            font-size: 15px !important;
             display: block;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -336,7 +336,7 @@
     </div>
 
     <div class="nav-buttons">
-        <div class="nav-btn" id="prevBtn" onclick="goToPrev()">
+        <div class="nav-btn" id="prevBtn" onclick="goToTop()">
             <svg viewBox="0 0 24 24">
                 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
             </svg>
@@ -483,12 +483,8 @@
             }
         }
 
-        function goToPrev() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                scrollToArticle(currentIndex);
-                updateNavButtons();
-            }
+        function goToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function goToNext() {
