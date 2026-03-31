@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="每日阅读">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>每日阅读</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, -apple-system-font, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 20px 20px 100px 20px;
+        }
+
+        .article {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .article:last-child {
+            border-bottom: none;
+        }
+
+        .article-date {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .article-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .article-content {
+            font-size: 20px;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.75);
+            text-align: justify;
+        }
+
+        .article-content p {
+            margin-bottom: 16px;
+        }
+
+        /* 导航按钮容器 */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 56px;
+            height: 44px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            letter-spacing: 1px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .nav-btn:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
+
+        /* 无文章状态 */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="loading">正在加载...</div>
+    </div>
+
+    <div class="nav-buttons">
+        <div class="nav-btn" id="prevBtn" onclick="goToPrev()">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+        </div>
+        <div class="nav-btn" id="nextBtn" onclick="goToNext()">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        let articles = [];
+        let currentIndex = 0;
+
+        async function loadArticles() {
+            try {
+                const response = await fetch('articles/list.json?t=' + Date.now());
+                articles = await response.json();
+                
+                if (articles.length === 0) {
+                    document.getElementById('container').innerHTML = '<div class="empty">暂无文章</div>';
+                    return;
+                }
+
+                // 按日期正序排列（最旧的在上，最新的在下）
+                articles.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                await renderArticles();
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('container').innerHTML = '<div class="empty">加载失败，请刷新重试</div>';
+            }
+        }
+
+        async function renderArticles() {
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < articles.length; i++) {
+                const article = articles[i];
+                
+                // 加载文章内容
+                let content = article.content || '';
+                if (article.file) {
+                    try {
+                        const response = await fetch(`articles/${article.file}?t=` + Date.now());
+                        const data = await response.json();
+                        content = data.content;
+                    } catch (e) {
+                        console.error('文章加载失败:', article.file, e);
+                        content = '内容加载失败';
+                    }
+                }
+
+                const articleHtml = `
+                    <div class="article" id="article-${i}" data-index="${i}">
+                        <div class="article-date">${formatDate(article.date)}</div>
+                        ${article.title ? `<div class="article-title">${article.title}</div>` : ''}
+                        <div class="article-content">${formatContent(content, article.title)}</div>
+                    </div>
+                `;
+                container.innerHTML += articleHtml;
+            }
+
+            // 默认显示最新文章（最后一篇）
+            currentIndex = articles.length - 1;
+            
+            // 滚动到当前文章
+            setTimeout(() => {
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }, 150);
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const weekDay = weekDays[date.getDay()];
+            return `${year}年${month}月${day}日 ${weekDay}`;
+        }
+
+        function formatContent(content, title) {
+            // 去掉开头的日期格式（如 2026.2.26 或 2026.2.25）
+            content = content.replace(/^\d{4}\.\d{1,2}\.\d{1,2}\s*\n?/, '');
+            // 去掉开头重复的标题（如果第一行和标题相似）
+            const firstLine = content.split('\n')[0].trim();
+            if (firstLine && title && (
+                firstLine === title || 
+                firstLine.includes(title) || 
+                title.includes(firstLine) ||
+                firstLine.replace(/[《》【】]/g, '') === title.replace(/[《》【】]/g, '')
+            )) {
+                content = content.substring(firstLine.length).trim();
+            }
+            // 将换行符转换为段落
+            const paragraphs = content.split(/\n+/).filter(p => p.trim());
+            return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+        }
+
+        function scrollToArticle(index) {
+            const article = document.getElementById(`article-${index}`);
+            if (article) {
+                article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // 已经是最新的（最后一篇），隐藏下一篇按钮
+            if (currentIndex >= articles.length - 1) {
+                nextBtn.classList.add('disabled');
+            } else {
+                nextBtn.classList.remove('disabled');
+            }
+            
+            // 已经是最旧的（第一篇），隐藏上一篇按钮
+            if (currentIndex <= 0) {
+                prevBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+            }
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }
+        }
+
+        function goToNext() {
+            if (currentIndex < articles.length - 1) {
+                currentIndex++;
+                scrollToArticle(currentIndex);
+                updateNavButtons();
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', loadArticles);
+
+        // 监听页面返回
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                loadArticles();
+            }
+        });
+    </script>
+</body>
+</html>
